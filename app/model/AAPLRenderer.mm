@@ -1,10 +1,6 @@
 #import "AAPLRenderer.h"
 #import "shaders/AAPLShaderTypes.h"
-#import "util/AAPLConfig.h"
-
-#if CREATE_DEPTH_BUFFER
-static const MTLPixelFormat AAPLDepthPixelFormat = MTLPixelFormatDepth32Float;
-#endif
+#import "util/log_util.h"
 
 @implementation AAPLRenderer {
     // renderer global ivars
@@ -37,12 +33,6 @@ static const MTLPixelFormat AAPLDepthPixelFormat = MTLPixelFormatDepth32Float;
         _drawableRenderDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
         _drawableRenderDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
         _drawableRenderDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 1, 1, 1);
-
-#if CREATE_DEPTH_BUFFER
-        _drawableRenderDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
-        _drawableRenderDescriptor.depthAttachment.storeAction = MTLStoreActionDontCare;
-        _drawableRenderDescriptor.depthAttachment.clearDepth = 1.0;
-#endif
 
         {
             NSString* libraryFile = [[NSBundle mainBundle] pathForResource:@"shaders/shaders"
@@ -93,10 +83,6 @@ static const MTLPixelFormat AAPLDepthPixelFormat = MTLPixelFormatDepth32Float;
             pipelineDescriptor.fragmentFunction = fragmentProgram;
             pipelineDescriptor.colorAttachments[0].pixelFormat = drawabklePixelFormat;
 
-#if CREATE_DEPTH_BUFFER
-            pipelineDescriptor.depthAttachmentPixelFormat = AAPLDepthPixelFormat;
-#endif
-
             NSError* error;
             _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor
                                                                      error:&error];
@@ -134,11 +120,7 @@ static const MTLPixelFormat AAPLDepthPixelFormat = MTLPixelFormatDepth32Float;
     {
         AAPLUniforms uniforms;
 
-#if ANIMATION_RENDERING
-        uniforms.scale = 0.5 + (1.0 + 0.5 * sin(_frameNum * 0.1));
-#else
         uniforms.scale = 1.0;
-#endif
         uniforms.viewportSize = _viewportSize;
 
         [renderEncoder setVertexBytes:&uniforms
@@ -153,24 +135,13 @@ static const MTLPixelFormat AAPLDepthPixelFormat = MTLPixelFormatDepth32Float;
     [commandBuffer presentDrawable:currentDrawable];
 
     [commandBuffer commit];
+
+    custom_log(OS_LOG_TYPE_DEFAULT, @"AAPLRenderer", @"hello");
 }
 
 - (void)drawableResize:(CGSize)drawableSize {
     _viewportSize.x = drawableSize.width;
     _viewportSize.y = drawableSize.height;
-
-#if CREATE_DEPTH_BUFFER
-    MTLTextureDescriptor* depthTargetDescriptor = [MTLTextureDescriptor new];
-    depthTargetDescriptor.width = drawableSize.width;
-    depthTargetDescriptor.height = drawableSize.height;
-    depthTargetDescriptor.pixelFormat = AAPLDepthPixelFormat;
-    depthTargetDescriptor.storageMode = MTLStorageModePrivate;
-    depthTargetDescriptor.usage = MTLTextureUsageRenderTarget;
-
-    _depthTarget = [_device newTextureWithDescriptor:depthTargetDescriptor];
-
-    _drawableRenderDescriptor.depthAttachment.texture = _depthTarget;
-#endif
 }
 
 @end

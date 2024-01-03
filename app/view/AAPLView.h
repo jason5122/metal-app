@@ -1,4 +1,3 @@
-#import "util/AAPLConfig.h"
 #import <AppKit/AppKit.h>
 #import <Metal/Metal.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -23,13 +22,7 @@
 
 - (void)initCommon;
 
-#if AUTOMATICALLY_RESIZE
 - (void)resizeDrawable:(CGFloat)scaleFactor;
-#endif
-
-#if ANIMATION_RENDERING
-- (void)stopRenderLoop;
-#endif
 
 - (void)render;
 

@@ -24,18 +24,6 @@
     self.layer.delegate = self;
 }
 
-#if ANIMATION_RENDERING
-
-- (void)stopRenderLoop {
-    // Stubbed out method.  Subclasses need to implement this method.
-}
-
-- (void)dealloc {
-    [self stopRenderLoop];
-}
-
-#else  // IF !ANIMATION_RENDERING
-
 // Override methods needed to handle event-based rendering
 
 - (void)displayLayer:(CALayer*)layer {
@@ -51,18 +39,8 @@
 }
 
 - (void)renderOnEvent {
-#if RENDER_ON_MAIN_THREAD
     [self render];
-#else
-    // Dispatch rendering on a concurrent queue
-    dispatch_queue_t globalQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
-    dispatch_async(globalQueue, ^() { [self render]; });
-#endif
 }
-
-#endif  // END !ANIMAITON_RENDERING
-
-#if AUTOMATICALLY_RESIZE
 
 - (void)resizeDrawable:(CGFloat)scaleFactor {
     CGSize newSize = self.bounds.size;
@@ -73,8 +51,6 @@
         return;
     }
 
-#if RENDER_ON_MAIN_THREAD
-
     if (newSize.width == _metalLayer.drawableSize.width &&
         newSize.height == _metalLayer.drawableSize.height) {
         return;
@@ -83,35 +59,10 @@
     _metalLayer.drawableSize = newSize;
 
     [_delegate drawableResize:newSize];
-
-#else
-    // All AppKit and UIKit calls which notify of a resize are called on the main thread.  Use
-    // a synchronized block to ensure that resize notifications on the delegate are atomic
-    @synchronized(_metalLayer) {
-        if (newSize.width == _metalLayer.drawableSize.width &&
-            newSize.height == _metalLayer.drawableSize.height) {
-            return;
-        }
-
-        _metalLayer.drawableSize = newSize;
-
-        [_delegate drawableResize:newSize];
-    }
-#endif
 }
 
-#endif
-
 - (void)render {
-#if RENDER_ON_MAIN_THREAD
     [_delegate renderToMetalLayer:_metalLayer];
-#else
-    // Must synchronize if rendering on background thread to ensure resize operations from the
-    // main thread are complete before rendering which depends on the size occurs.
-    @synchronized(_metalLayer) {
-        [_delegate renderToMetalLayer:_metalLayer];
-    }
-#endif
 }
 
 @end

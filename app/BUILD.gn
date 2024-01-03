@@ -14,9 +14,11 @@ macos_app_bundle("app") {
     "controller/WindowController.m",
     "main.m",
     "model/AAPLRenderer.mm",
+    "model/Renderer.mm",
     "util/log_util.mm",
     "view/AAPLNSView.m",
     "view/AAPLView.m",
+    "view/MetalLayerView.m",
   ]
 
   frameworks = [

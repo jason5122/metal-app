@@ -1,5 +1,6 @@
 #import "WindowController.h"
 #import "controller/AAPLViewController.h"
+#import "view/MetalLayerView.h"
 
 @implementation WindowController
 
