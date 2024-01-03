@@ -8,23 +8,18 @@
     id<MTLCommandQueue> _commandQueue;
     id<MTLRenderPipelineState> _pipelineState;
     id<MTLBuffer> _vertices;
-    id<MTLTexture> _depthTarget;
 
     // Render pass descriptor which creates a render command encoder to draw to the drawable
     // textures
     MTLRenderPassDescriptor* _drawableRenderDescriptor;
 
     vector_uint2 _viewportSize;
-
-    NSUInteger _frameNum;
 }
 
 - (nonnull instancetype)initWithMetalDevice:(nonnull id<MTLDevice>)device
                         drawablePixelFormat:(MTLPixelFormat)drawabklePixelFormat {
     self = [super init];
     if (self) {
-        _frameNum = 0;
-
         _device = device;
 
         _commandQueue = [_device newCommandQueue];
@@ -32,7 +27,8 @@
         _drawableRenderDescriptor = [MTLRenderPassDescriptor new];
         _drawableRenderDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
         _drawableRenderDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-        _drawableRenderDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 1, 1, 1);
+        _drawableRenderDescriptor.colorAttachments[0].clearColor =
+            MTLClearColorMake(0.95, 0.95, 0.95, 1);
 
         {
             NSString* libraryFile = [[NSBundle mainBundle] pathForResource:@"shaders/shaders"
@@ -63,12 +59,9 @@
             // coordinates
             static const Vertex quadVertices[] = {
                 // Pixel positions, Color coordinates
-                {{250, -250}, {1.f, 0.f, 0.f}},   //
-                {{-250, -250}, {0.f, 1.f, 0.f}},  //
-                {{-250, 250}, {0.f, 0.f, 1.f}},   //
-                {{250, -250}, {1.f, 0.f, 0.f}},   //
-                {{-250, 250}, {0.f, 0.f, 1.f}},   //
-                {{250, 250}, {1.f, 0.f, 1.f}},    //
+                {{0, 250}, {1.f, 0.f, 0.f}},    //
+                {{250, 0}, {0.f, 1.f, 0.f}},    //
+                {{250, 250}, {0.f, 0.f, 1.f}},  //
             };
 
             // Create a vertex buffer, and initialize it with the vertex data.
@@ -101,17 +94,13 @@
 }
 
 - (void)renderToMetalLayer:(nonnull CAMetalLayer*)metalLayer {
-    _frameNum++;
-
     // Create a new command buffer for each render pass to the current drawable.
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
 
     id<CAMetalDrawable> currentDrawable = [metalLayer nextDrawable];
 
     // If the current drawable is nil, skip rendering this frame
-    if (!currentDrawable) {
-        return;
-    }
+    if (!currentDrawable) return;
 
     _drawableRenderDescriptor.colorAttachments[0].texture = currentDrawable.texture;
 
@@ -132,13 +121,10 @@
     }
 
     [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
-
     [renderEncoder endEncoding];
 
     [commandBuffer presentDrawable:currentDrawable];
-
     [commandBuffer commit];
-
     [commandBuffer waitUntilScheduled];
 }
 

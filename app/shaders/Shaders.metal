@@ -11,6 +11,13 @@ struct RasterizerData {
     float3 color;
 };
 
+float2 normalize(float2 point, float2 viewportSize) {
+    float2 inverseViewportSize = 1 / (viewportSize / 2.0);
+    float clipX = (point.x * inverseViewportSize.x) - 1.0f;
+    float clipY = (-point.y * inverseViewportSize.y) + 1.0f;
+    return float2(clipX, clipY);
+}
+
 vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
                                    constant Vertex* vertexArray
                                    [[buffer(VertexInputIndexVertices)]],
@@ -19,15 +26,9 @@ vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
     RasterizerData out;
 
     float2 pixelSpacePosition = vertexArray[vertexID].position.xy;
-
     float2 viewportSize = float2(uniforms.viewportSize);
 
-    // Fix coordinates to bottom left to test judder.
-    pixelSpacePosition -= (viewportSize / 2.0);
-
-    // Divide the pixel coordinates by half the size of the viewport to convert from positions in
-    // pixel space to positions in clip space
-    out.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2.0);
+    out.clipSpacePosition.xy = normalize(pixelSpacePosition, viewportSize);
     out.clipSpacePosition.z = 0.0;
     out.clipSpacePosition.w = 1.0;
 
