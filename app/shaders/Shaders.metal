@@ -14,7 +14,7 @@ struct RasterizerData {
 float2 normalize(float2 point, float2 viewportSize) {
     float2 inverseViewportSize = 1 / (viewportSize / 2.0);
     float clipX = (point.x * inverseViewportSize.x) - 1.0f;
-    float clipY = (-point.y * inverseViewportSize.y) + 1.0f;
+    float clipY = (point.y * inverseViewportSize.y) - 1.0f;
     return float2(clipX, clipY);
 }
 

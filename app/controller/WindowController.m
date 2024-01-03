@@ -12,6 +12,7 @@
                                                   styleMask:mask
                                                     backing:NSBackingStoreBuffered
                                                       defer:false];
+        self.window.title = @"Metal App";
 
         ViewController* viewController = [[ViewController alloc] initWithFrame:frameRect];
         self.window.contentView = viewController.view;
