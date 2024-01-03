@@ -1,8 +1,8 @@
-#import "AAPLRenderer.h"
-#import "shaders/AAPLShaderTypes.h"
+#import "Renderer.h"
+#import "shaders/ShaderTypes.h"
 #import "util/log_util.h"
 
-@implementation AAPLRenderer {
+@implementation Renderer {
     // renderer global ivars
     id<MTLDevice> _device;
     id<MTLCommandQueue> _commandQueue;
@@ -39,7 +39,7 @@
                                                                     ofType:@"metallib"];
             id<MTLLibrary> shaderLib = [_device newLibraryWithFile:libraryFile error:nil];
             if (!shaderLib) {
-                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                custom_log(OS_LOG_TYPE_ERROR, @"Renderer",
                            @"Couldnt create a default shader library");
                 // assert here because if the shader libary isn't loading, nothing good will happen
                 return nil;
@@ -47,21 +47,21 @@
 
             id<MTLFunction> vertexProgram = [shaderLib newFunctionWithName:@"vertexShader"];
             if (!vertexProgram) {
-                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                custom_log(OS_LOG_TYPE_ERROR, @"Renderer",
                            @"Couldn't load vertex function from default library");
                 return nil;
             }
 
             id<MTLFunction> fragmentProgram = [shaderLib newFunctionWithName:@"fragmentShader"];
             if (!fragmentProgram) {
-                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                custom_log(OS_LOG_TYPE_ERROR, @"Renderer",
                            @"Couldn't load fragment function from default library");
                 return nil;
             }
 
             // Set up a simple MTLBuffer with the vertices, including position and texture
             // coordinates
-            static const AAPLVertex quadVertices[] = {
+            static const Vertex quadVertices[] = {
                 // Pixel positions, Color coordinates
                 {{250, -250}, {1.f, 0.f, 0.f}},   //
                 {{-250, -250}, {0.f, 1.f, 0.f}},  //
@@ -91,8 +91,8 @@
             _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor
                                                                      error:&error];
             if (!_pipelineState) {
-                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
-                           @"Failed aquiring pipeline state: %@", error);
+                custom_log(OS_LOG_TYPE_ERROR, @"Renderer", @"Failed aquiring pipeline state: %@",
+                           error);
                 return nil;
             }
         }
@@ -120,15 +120,15 @@
 
     [renderEncoder setRenderPipelineState:_pipelineState];
 
-    [renderEncoder setVertexBuffer:_vertices offset:0 atIndex:AAPLVertexInputIndexVertices];
+    [renderEncoder setVertexBuffer:_vertices offset:0 atIndex:VertexInputIndexVertices];
 
     {
-        AAPLUniforms uniforms;
+        Uniforms uniforms;
         uniforms.viewportSize = _viewportSize;
 
         [renderEncoder setVertexBytes:&uniforms
                                length:sizeof(uniforms)
-                              atIndex:AAPLVertexInputIndexUniforms];
+                              atIndex:VertexInputIndexUniforms];
     }
 
     [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];

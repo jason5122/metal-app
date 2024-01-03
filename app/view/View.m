@@ -1,6 +1,6 @@
-#import "AAPLView.h"
+#import "View.h"
 
-@implementation AAPLView
+@implementation View
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

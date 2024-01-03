@@ -3,7 +3,7 @@
 using namespace metal;
 
 // Include header shared between this Metal shader code and C code executing Metal API commands
-#include "AAPLShaderTypes.h"
+#include "ShaderTypes.h"
 
 // Vertex shader outputs and per-fragment inputs
 struct RasterizerData {
@@ -12,10 +12,10 @@ struct RasterizerData {
 };
 
 vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
-                                   constant AAPLVertex* vertexArray
-                                   [[buffer(AAPLVertexInputIndexVertices)]],
-                                   constant AAPLUniforms& uniforms
-                                   [[buffer(AAPLVertexInputIndexUniforms)]]) {
+                                   constant Vertex* vertexArray
+                                   [[buffer(VertexInputIndexVertices)]],
+                                   constant Uniforms& uniforms
+                                   [[buffer(VertexInputIndexUniforms)]]) {
     RasterizerData out;
 
     float2 pixelSpacePosition = vertexArray[vertexID].position.xy;

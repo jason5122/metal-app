@@ -10,12 +10,12 @@ macos_app_bundle("app") {
 
   sources = [
     "AppDelegate.m",
-    "controller/AAPLViewController.m",
+    "controller/ViewController.m",
     "controller/WindowController.m",
     "main.m",
-    "model/AAPLRenderer.mm",
+    "model/Renderer.mm",
     "util/log_util.mm",
-    "view/AAPLView.m",
+    "view/View.m",
   ]
 
   frameworks = [

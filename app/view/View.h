@@ -3,7 +3,7 @@
 #import <QuartzCore/CAMetalLayer.h>
 
 // Protocol to provide resize and redraw callbacks to a delegate
-@protocol AAPLViewDelegate <NSObject>
+@protocol ViewDelegate <NSObject>
 
 - (void)drawableResize:(CGSize)size;
 
@@ -12,11 +12,11 @@
 @end
 
 // Metal view base class
-@interface AAPLView : NSView <CALayerDelegate>
+@interface View : NSView <CALayerDelegate>
 
 @property(nonatomic, nonnull, readonly) CAMetalLayer* metalLayer;
 
-@property(nonatomic, nullable) id<AAPLViewDelegate> delegate;
+@property(nonatomic, nullable) id<ViewDelegate> delegate;
 
 - (void)resizeDrawable:(CGFloat)scaleFactor;
 

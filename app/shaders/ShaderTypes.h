@@ -1,12 +1,12 @@
-#ifndef AAPLShaderTypes_h
-#define AAPLShaderTypes_h
+#ifndef ShaderTypes_h
+#define ShaderTypes_h
 
 #include <simd/simd.h>
 
-typedef enum AAPLVertexInputIndex {
-    AAPLVertexInputIndexVertices = 0,
-    AAPLVertexInputIndexUniforms = 1,
-} AAPLVertexInputIndex;
+typedef enum VertexInputIndex {
+    VertexInputIndexVertices = 0,
+    VertexInputIndexUniforms = 1,
+} VertexInputIndex;
 
 typedef struct {
     // Positions in pixel space (i.e. a value of 100 indicates 100 pixels from the origin/center)
@@ -14,10 +14,10 @@ typedef struct {
 
     // 2D texture coordinate
     vector_float3 color;
-} AAPLVertex;
+} Vertex;
 
 typedef struct {
     vector_uint2 viewportSize;
-} AAPLUniforms;
+} Uniforms;
 
-#endif /* AAPLShaderTypes_h */
+#endif /* ShaderTypes_h */

@@ -1,5 +1,5 @@
 #import "WindowController.h"
-#import "controller/AAPLViewController.h"
+#import "controller/ViewController.h"
 
 @implementation WindowController
 
@@ -13,7 +13,7 @@
                                                     backing:NSBackingStoreBuffered
                                                       defer:false];
 
-        AAPLViewController* viewController = [[AAPLViewController alloc] initWithFrame:frameRect];
+        ViewController* viewController = [[ViewController alloc] initWithFrame:frameRect];
         self.window.contentView = viewController.view;
     }
     return self;

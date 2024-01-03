@@ -7,7 +7,7 @@ action("angle_metal_shaders_to_air") {
 
   outputs = [ _metal_shaders_air_file ]
 
-  _metal_shaders_metal_source = "AAPLShaders.metal"
+  _metal_shaders_metal_source = "Shaders.metal"
   sources = [ _metal_shaders_metal_source ]
 
   args = [
