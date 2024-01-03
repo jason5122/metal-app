@@ -1,0 +1,44 @@
+import("//build/config/mac/templates/icon.gni")
+import("//build/config/mac/templates/macos_app_bundle.gni")
+
+macos_app_bundle("app") {
+  output_name = "MetalApp"
+  bundle_identifier = "com.jason5122.metal-app"
+  info_plist = "resources/Info.plist"
+
+  # define `code_signing_identity` in args.gn
+
+  sources = [
+    "AppDelegate.m",
+    "controller/AAPLViewController.m",
+    "controller/WindowController.m",
+    "main.m",
+    "model/AAPLRenderer.mm",
+    "util/log_util.mm",
+    "view/AAPLNSView.m",
+    "view/AAPLView.m",
+  ]
+
+  frameworks = [
+    "Cocoa.framework",
+    "Metal.framework",
+    "QuartzCore.framework",
+  ]
+
+  include_dirs = [ "//app" ]
+
+  deps = [
+    ":icon",
+    ":shaders",
+  ]
+}
+
+icon("icon") {
+  sources = [ "resources/app.iconset" ]
+}
+
+bundle_data("shaders") {
+  sources = [ "$root_gen_dir/shaders/shaders.metallib" ]
+  outputs = [ "{{bundle_resources_dir}}/shaders/{{source_file_part}}" ]
+  public_deps = [ "//app/shaders:metal_shaders_to_metallib" ]
+}
