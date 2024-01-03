@@ -22,7 +22,6 @@
         metalView.delegate = self;
 
         metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-        // metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
 
         // This is crucial for eliminating resize judder.
         metalView.metalLayer.presentsWithTransaction = true;

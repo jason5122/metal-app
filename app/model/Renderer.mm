@@ -63,6 +63,14 @@
             static const Vertex quadVertices[] = {
                 // Pixel positions, Color coordinates
 
+                // Tab bar
+                {{0, 1051 * 2 - 60}, gray},         //
+                {{1728 * 2, 1051 * 2}, gray},       //
+                {{0, 1051 * 2}, gray},              //
+                {{1728 * 2, 1051 * 2 - 60}, gray},  //
+                {{1728 * 2, 1051 * 2}, gray},       //
+                {{0, 1051 * 2 - 60}, gray},         //
+
                 // Side bar
                 {{400, 0}, gray},         //
                 {{0, 1051 * 2}, gray},    //
@@ -138,7 +146,7 @@
                               atIndex:VertexInputIndexUniforms];
     }
 
-    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:12];
+    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:18];
     [renderEncoder endEncoding];
 
     [commandBuffer presentDrawable:currentDrawable];
