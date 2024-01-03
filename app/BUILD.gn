@@ -15,7 +15,6 @@ macos_app_bundle("app") {
     "main.m",
     "model/AAPLRenderer.mm",
     "util/log_util.mm",
-    "view/AAPLNSView.m",
     "view/AAPLView.m",
   ]
 

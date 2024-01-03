@@ -16,11 +16,7 @@
 
 @property(nonatomic, nonnull, readonly) CAMetalLayer* metalLayer;
 
-@property(nonatomic, getter=isPaused) BOOL paused;
-
 @property(nonatomic, nullable) id<AAPLViewDelegate> delegate;
-
-- (void)initCommon;
 
 - (void)resizeDrawable:(CGFloat)scaleFactor;
 

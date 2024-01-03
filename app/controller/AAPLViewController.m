@@ -1,7 +1,6 @@
 #import "AAPLViewController.h"
 #import "model/AAPLRenderer.h"
-#import "view/AAPLNSView.h"
-
+#import "view/AAPLView.h"
 #import <QuartzCore/CAMetalLayer.h>
 
 @implementation AAPLViewController {
@@ -13,7 +12,7 @@
     if (self) {
         id<MTLDevice> device = MTLCreateSystemDefaultDevice();
 
-        AAPLNSView* metalView = [[AAPLNSView alloc] initWithFrame:frameRect];
+        AAPLView* metalView = [[AAPLView alloc] initWithFrame:frameRect];
 
         // Set the device for the layer so the layer can create drawable textures that can be
         // rendered to on this device.
@@ -24,10 +23,7 @@
 
         metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
 
-        // these properties are crucial to resizing working
-        metalView.metalLayer.allowsNextDrawableTimeout = false;
-        metalView.metalLayer.autoresizingMask = kCALayerHeightSizable | kCALayerWidthSizable;
-        metalView.metalLayer.needsDisplayOnBoundsChange = true;
+        // This is crucial for eliminating resize judder.
         metalView.metalLayer.presentsWithTransaction = true;
 
         _renderer = [[AAPLRenderer alloc] initWithMetalDevice:device
