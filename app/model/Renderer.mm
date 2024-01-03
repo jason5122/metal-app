@@ -17,7 +17,7 @@
 }
 
 - (nonnull instancetype)initWithMetalDevice:(nonnull id<MTLDevice>)device
-                        drawablePixelFormat:(MTLPixelFormat)drawabklePixelFormat {
+                        drawablePixelFormat:(MTLPixelFormat)drawablePixelFormat {
     self = [super init];
     if (self) {
         _device = device;
@@ -28,7 +28,7 @@
         _drawableRenderDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
         _drawableRenderDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
         _drawableRenderDescriptor.colorAttachments[0].clearColor =
-            MTLClearColorMake(0.95, 0.95, 0.95, 1);
+            MTLClearColorMake(253 / 255.f, 253 / 255.f, 253 / 255.f, 1);
 
         {
             NSString* libraryFile = [[NSBundle mainBundle] pathForResource:@"shaders/shaders"
@@ -57,11 +57,27 @@
 
             // Set up a simple MTLBuffer with the vertices, including position and texture
             // coordinates
+            vector_float3 gray = {228 / 255.f, 228 / 255.f, 228 / 255.f};
+            // vector_float3 gray = {228 / 255.f, 228 / 255.f, 228 / 255.f};
+            vector_float3 darkGray = {207 / 255.f, 207 / 255.f, 207 / 255.f};
             static const Vertex quadVertices[] = {
                 // Pixel positions, Color coordinates
-                {{0, 250}, {1.f, 0.f, 0.f}},  //
-                {{250, 0}, {0.f, 1.f, 0.f}},  //
-                {{0, 0}, {0.f, 0.f, 1.f}},    //
+
+                // Side bar
+                {{400, 0}, gray},         //
+                {{0, 1051 * 2}, gray},    //
+                {{0, 0}, gray},           //
+                {{400, 1051 * 2}, gray},  //
+                {{0, 1051 * 2}, gray},    //
+                {{400, 0}, gray},         //
+
+                // Status bar
+                {{0, 100}, darkGray},         //
+                {{1728 * 2, 0}, darkGray},    //
+                {{0, 0}, darkGray},           //
+                {{1728 * 2, 100}, darkGray},  //
+                {{1728 * 2, 0}, darkGray},    //
+                {{0, 100}, darkGray},         //
             };
 
             // Create a vertex buffer, and initialize it with the vertex data.
@@ -78,7 +94,7 @@
             pipelineDescriptor.label = @"MyPipeline";
             pipelineDescriptor.vertexFunction = vertexProgram;
             pipelineDescriptor.fragmentFunction = fragmentProgram;
-            pipelineDescriptor.colorAttachments[0].pixelFormat = drawabklePixelFormat;
+            pipelineDescriptor.colorAttachments[0].pixelFormat = drawablePixelFormat;
 
             NSError* error;
             _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor
@@ -111,6 +127,8 @@
 
     [renderEncoder setVertexBuffer:_vertices offset:0 atIndex:VertexInputIndexVertices];
 
+    custom_log(OS_LOG_TYPE_DEFAULT, @"Renderer", @"%dx%d", _viewportSize.x, _viewportSize.y);
+
     {
         Uniforms uniforms;
         uniforms.viewportSize = _viewportSize;
@@ -120,7 +138,7 @@
                               atIndex:VertexInputIndexUniforms];
     }
 
-    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
+    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:12];
     [renderEncoder endEncoding];
 
     [commandBuffer presentDrawable:currentDrawable];

@@ -49,18 +49,14 @@
 // Override methods needed to handle event-based rendering
 
 - (void)displayLayer:(CALayer*)layer {
-    [self renderOnEvent];
+    [self render];
 }
 
 - (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)ctx {
-    [self renderOnEvent];
+    [self render];
 }
 
 - (void)drawRect:(CGRect)rect {
-    [self renderOnEvent];
-}
-
-- (void)renderOnEvent {
     [self render];
 }
 

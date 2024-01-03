@@ -14,6 +14,12 @@
                                                       defer:false];
         self.window.title = @"Metal App";
 
+        self.window.titlebarAppearsTransparent = true;
+        self.window.backgroundColor = [NSColor colorWithSRGBRed:228 / 255.f
+                                                          green:228 / 255.f
+                                                           blue:228 / 255.f
+                                                          alpha:1.f];
+
         ViewController* viewController = [[ViewController alloc] initWithFrame:frameRect];
         self.window.contentView = viewController.view;
     }

@@ -1,5 +1,4 @@
-#ifndef ShaderTypes_h
-#define ShaderTypes_h
+#pragma once
 
 #include <simd/simd.h>
 
@@ -19,5 +18,3 @@ typedef struct {
 typedef struct {
     vector_uint2 viewportSize;
 } Uniforms;
-
-#endif /* ShaderTypes_h */

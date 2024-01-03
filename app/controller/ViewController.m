@@ -21,7 +21,8 @@
         // Set this class as the delegate to receive resize and render callbacks.
         metalView.delegate = self;
 
-        metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
+        metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+        // metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
 
         // This is crucial for eliminating resize judder.
         metalView.metalLayer.presentsWithTransaction = true;
