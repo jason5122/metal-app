@@ -17,7 +17,6 @@ typedef struct {
 } AAPLVertex;
 
 typedef struct {
-    float scale;
     vector_uint2 viewportSize;
 } AAPLUniforms;
 

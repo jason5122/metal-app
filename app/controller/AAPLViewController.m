@@ -24,6 +24,12 @@
 
         metalView.metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
 
+        // these properties are crucial to resizing working
+        metalView.metalLayer.allowsNextDrawableTimeout = false;
+        metalView.metalLayer.autoresizingMask = kCALayerHeightSizable | kCALayerWidthSizable;
+        metalView.metalLayer.needsDisplayOnBoundsChange = true;
+        metalView.metalLayer.presentsWithTransaction = true;
+
         _renderer = [[AAPLRenderer alloc] initWithMetalDevice:device
                                           drawablePixelFormat:metalView.metalLayer.pixelFormat];
 

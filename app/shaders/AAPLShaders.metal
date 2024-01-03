@@ -1,6 +1,5 @@
 #include <metal_stdlib>
 #include <simd/simd.h>
-
 using namespace metal;
 
 // Include header shared between this Metal shader code and C code executing Metal API commands
@@ -21,10 +20,10 @@ vertex RasterizerData vertexShader(uint vertexID [[vertex_id]],
 
     float2 pixelSpacePosition = vertexArray[vertexID].position.xy;
 
-    // Scale the vertex by scale factor of the current frame
-    pixelSpacePosition *= uniforms.scale;
-
     float2 viewportSize = float2(uniforms.viewportSize);
+
+    // Fix coordinates to bottom left to test judder.
+    pixelSpacePosition -= (viewportSize / 2.0);
 
     // Divide the pixel coordinates by half the size of the viewport to convert from positions in
     // pixel space to positions in clip space
