@@ -39,20 +39,23 @@
                                                                     ofType:@"metallib"];
             id<MTLLibrary> shaderLib = [_device newLibraryWithFile:libraryFile error:nil];
             if (!shaderLib) {
-                NSLog(@" ERROR: Couldnt create a default shader library");
+                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                           @"Couldnt create a default shader library");
                 // assert here because if the shader libary isn't loading, nothing good will happen
                 return nil;
             }
 
             id<MTLFunction> vertexProgram = [shaderLib newFunctionWithName:@"vertexShader"];
             if (!vertexProgram) {
-                NSLog(@">> ERROR: Couldn't load vertex function from default library");
+                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                           @"Couldn't load vertex function from default library");
                 return nil;
             }
 
             id<MTLFunction> fragmentProgram = [shaderLib newFunctionWithName:@"fragmentShader"];
             if (!fragmentProgram) {
-                NSLog(@" ERROR: Couldn't load fragment function from default library");
+                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                           @"Couldn't load fragment function from default library");
                 return nil;
             }
 
@@ -88,7 +91,8 @@
             _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor
                                                                      error:&error];
             if (!_pipelineState) {
-                NSLog(@"ERROR: Failed aquiring pipeline state: %@", error);
+                custom_log(OS_LOG_TYPE_ERROR, @"AAPLRenderer",
+                           @"Failed aquiring pipeline state: %@", error);
                 return nil;
             }
         }
@@ -136,8 +140,6 @@
     [commandBuffer commit];
 
     [commandBuffer waitUntilScheduled];
-
-    custom_log(OS_LOG_TYPE_DEFAULT, @"AAPLRenderer", @"hello");
 }
 
 - (void)drawableResize:(CGSize)drawableSize {
